@@ -4,8 +4,8 @@ from io import StringIO
 from token import NAME
 from tokenize import generate_tokens
 
-from ssort._exceptions import ParseError
-from ssort._statements import Statement
+from osort._exceptions import ParseError
+from osort._statements import Statement
 
 
 def _find_start(node):

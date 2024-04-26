@@ -3,11 +3,11 @@ import difflib
 import re
 import sys
 
-from ssort import __version__
-from ssort._exceptions import UnknownEncodingError
-from ssort._files import find_python_files
-from ssort._ssort import ssort
-from ssort._utils import (
+from osort import __version__
+from osort._exceptions import UnknownEncodingError
+from osort._files import find_python_files
+from osort._osort import osort
+from osort._utils import (
     detect_encoding,
     detect_newline,
     escape_path,
@@ -30,7 +30,7 @@ def main():
         "--diff",
         dest="show_diff",
         action="store_true",
-        help="Prints a diff of all changes ssort would make to a file.",
+        help="Prints a diff of all changes osort would make to a file.",
     )
     parser.add_argument(
         "--check",
@@ -46,7 +46,7 @@ def main():
     args = parser.parse_args()
 
     if args.version:
-        sys.stdout.write(f"ssort {__version__}\n")
+        sys.stdout.write(f"osort {__version__}\n")
         return
 
     unsorted = 0
@@ -71,7 +71,7 @@ def main():
             unsortable += 1
             continue
 
-        # The logic for converting from bytes to text is duplicated in `ssort`
+        # The logic for converting from bytes to text is duplicated in `osort`
         # and here because we need access to the text to be able to compute a
         # diff at the end.
         try:
@@ -120,7 +120,7 @@ def main():
             )
 
         try:
-            updated = ssort(
+            updated = osort(
                 original,
                 filename=escape_path(path),
                 on_parse_error=_on_parse_error,
@@ -145,7 +145,7 @@ def main():
                 sys.stderr.write(f"Sorting {escape_path(path)}\n")
 
                 # The logic for converting from bytes to text is duplicated in
-                # `ssort` and here because we need access to the text to be able
+                # `osort` and here because we need access to the text to be able
                 # to compute a diff at the end.
                 # We rename a little prematurely to avoid shadowing `updated`,
                 # which we use later for printing the diff.

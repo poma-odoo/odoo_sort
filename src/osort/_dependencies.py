@@ -1,5 +1,5 @@
-from ssort._builtins import MODULE_BUILTINS
-from ssort._graphs import Graph
+from osort._builtins import MODULE_BUILTINS
+from osort._graphs import Graph
 
 
 def module_statements_graph(statements, *, on_unresolved, on_wildcard_import):
@@ -17,7 +17,7 @@ def module_statements_graph(statements, *, on_unresolved, on_wildcard_import):
         If no exception is raised, the graph returned by this function will not
         contain a link for the missing requirement.
     :param on_wildcard_import:
-        A callback that should be invoked if ssort detects a `*` import.  If no
+        A callback that should be invoked if osort detects a `*` import.  If no
         exception is raised, all dangling references will be pointed back to the
         last `*` import.
 

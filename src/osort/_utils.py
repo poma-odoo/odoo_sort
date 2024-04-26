@@ -8,7 +8,7 @@ import sys
 import tokenize
 from typing import Any, Callable, Generic, TypeVar
 
-from ssort._exceptions import UnknownEncodingError
+from osort._exceptions import UnknownEncodingError
 
 if sys.version_info < (3, 9):
     memoize = functools.lru_cache(maxsize=None)
@@ -18,6 +18,19 @@ else:
 
 def sort_key_from_iter(values):
     index = {statement: index for index, statement in enumerate(values)}
+    key = lambda value: index[value]
+    return key
+
+
+def sort_key_from_other(statements, sort_base):
+    """
+    Sort key function that uses another list which the values
+    of the other fields are part of main values.
+    param values: list of statements
+    param sort_base: list of strings which are part of strings in values
+    """
+    other_index = {other_value: index for index, other_value in enumerate(sort_base)}
+    index = {statement: other_index[other_value] for statement in statements for other_value in sort_base if other_value in statement.bindings()[:1]}
     key = lambda value: index[value]
     return key
 
@@ -34,7 +47,7 @@ class _SingleDispatch(Generic[_T]):
         self._functions: dict[type[Any], Callable[..., _T]] = {}
 
     def register(
-        self, cls: type[Any]
+            self, cls: type[Any]
     ) -> Callable[[Callable[..., _T]], Callable[..., _T]]:
         def decorator(function: Callable[..., _T]) -> Callable[..., _T]:
             self._functions[cls] = function

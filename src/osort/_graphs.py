@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Callable, Generic, Hashable, TypeVar
 
-from ssort._utils import sort_key_from_iter
+from osort._utils import sort_key_from_iter
 
 _T = TypeVar("_T", bound=Hashable)
 

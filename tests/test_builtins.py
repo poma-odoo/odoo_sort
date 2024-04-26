@@ -3,7 +3,7 @@ import builtins
 import os.path
 import subprocess
 
-from ssort._builtins import CLASS_BUILTINS, MODULE_BUILTINS
+from odoo_sort._builtins import CLASS_BUILTINS, MODULE_BUILTINS
 
 
 def _get_builtins():

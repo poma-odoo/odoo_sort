@@ -1,15 +1,15 @@
 *****
-SSort
+osort
 *****
 
 |build-status| |coverage|
 
-.. |build-status| image:: https://github.com/bwhmather/ssort/actions/workflows/ci.yaml/badge.svg?branch=master
-    :target: https://github.com/bwhmather/ssort/actions/workflows/ci.yaml
+.. |build-status| image:: https://github.com/bwhmather/osort/actions/workflows/ci.yaml/badge.svg?branch=master
+    :target: https://github.com/bwhmather/osort/actions/workflows/ci.yaml
     :alt: Build Status
 
-.. |coverage| image:: https://coveralls.io/repos/github/bwhmather/ssort/badge.svg?branch=master
-    :target: https://coveralls.io/github/bwhmather/ssort?branch=master
+.. |coverage| image:: https://coveralls.io/repos/github/bwhmather/osort/badge.svg?branch=master
+    :target: https://coveralls.io/github/bwhmather/osort?branch=master
     :alt: Cocerage
 
 
@@ -76,11 +76,11 @@ Installation
 ============
 .. begin-installation
 
-SSort can be installed manually using pip.
+osort can be installed manually using pip.
 
 .. code:: bash
 
-    $ pip install ssort
+    $ pip install osort
 
 .. end-installation
 
@@ -90,33 +90,33 @@ Usage
 .. begin-usage
 
 To check that a file is correctly sorted use the `--check` flag.
-`--diff` can be passed to see what changes ``ssort`` would make.
+`--diff` can be passed to see what changes ``osort`` would make.
 
 .. code:: bash
 
-    $ ssort --check --diff path/to/python_module.py
+    $ osort --check --diff path/to/python_module.py
 
 
-To allow ``ssort`` to rearrange your file, simply invoke with no extra flags.
-If ``ssort`` needs to make changes to a `black <https://black.readthedocs.io/en/stable/>`_ conformant file, the result will not necessarily be `black <https://black.readthedocs.io/en/stable/>`_ conformant.
-The result of running `black <https://black.readthedocs.io/en/stable/>`_ on an ``ssort`` conformant file will always be ``ssort`` conformant.
-We recommend that you reformat using `isort <https://pycqa.github.io/isort/>`_ and `black <https://black.readthedocs.io/en/stable/>`_ immediately after running ``ssort``.
+To allow ``osort`` to rearrange your file, simply invoke with no extra flags.
+If ``osort`` needs to make changes to a `black <https://black.readthedocs.io/en/stable/>`_ conformant file, the result will not necessarily be `black <https://black.readthedocs.io/en/stable/>`_ conformant.
+The result of running `black <https://black.readthedocs.io/en/stable/>`_ on an ``osort`` conformant file will always be ``osort`` conformant.
+We recommend that you reformat using `isort <https://pycqa.github.io/isort/>`_ and `black <https://black.readthedocs.io/en/stable/>`_ immediately after running ``osort``.
 
 .. code:: bash
 
-    $ ssort src/ tests/; isort src/ tests/; black src/ tests/
+    $ osort src/ tests/; isort src/ tests/; black src/ tests/
 
-You can also setup ssort to run automatically before commit by setting up `pre-commit <https://pre-commit.com/index.html>`_,
-and registering ssort in your `.pre-commit-config.yaml`.
+You can also setup osort to run automatically before commit by setting up `pre-commit <https://pre-commit.com/index.html>`_,
+and registering osort in your `.pre-commit-config.yaml`.
 
 .. code:: yaml
 
   repos:
   # ...
-  - repo: https://github.com/bwhmather/ssort
+  - repo: https://github.com/bwhmather/osort
     rev: master
     hooks:
-    - id: ssort
+    - id: osort
   - repo: https://github.com/pycqa/isort
     rev: master
     hooks:
@@ -135,20 +135,20 @@ Output
 ======
 .. begin-output
 
-``ssort`` will sort top level statements and statements in class bodies.
+``osort`` will sort top level statements and statements in class bodies.
 
-When sorting top level statements, ``ssort`` follows three simple rules:
+When sorting top level statements, ``osort`` follows three simple rules:
 
 - Statements must always be moved after the statements that they depend on, unless there is a cycle.
 - If there is a cycle, the order of statements within the cycle must not be changed.
 - If there is no dependency between statements then, to the greatest extent possible, the original order should be kept.
 
 These rules result in low level building blocks being moved to the top of modules, with higher level logic going at the bottom.
-The `FAQ <#why-does-ssort-sort-bottom-up-rather-than-top-down>`_ goes into some detail about why this order was chosen.
+The `FAQ <#why-does-osort-sort-bottom-up-rather-than-top-down>`_ goes into some detail about why this order was chosen.
 
 The rules for sorting class bodies are more complicated.
 Class methods are generally only called from outside the class and so there aren't usually many interdependencies from which to derive structure.
-``ssort`` therefore ignores (deferred) dependencies between d`under and public methods and instead divides up class statements into hard-coded groups that it arranges in the following order:
+``osort`` therefore ignores (deferred) dependencies between d`under and public methods and instead divides up class statements into hard-coded groups that it arranges in the following order:
 
 - The class docstring.
 - Special attributes, i.e. ``__slots__`` or ``__doc__``.
@@ -175,7 +175,7 @@ Frequently Asked Questions
 ==========================
 .. begin-faq
 
-Why does ``ssort`` sort bottom-up rather than top-down?
+Why does ``osort`` sort bottom-up rather than top-down?
 -------------------------------------------------------
 
 Python is a scripting language, which means that the body of each module is evaluated, statement by statement, from top to bottom.
@@ -309,18 +309,18 @@ If you want to find where a variable is used, you basically have to scan the who
 Every special case added to the sorting tool is a special case that programmers need to learn if they are to navigate quickly, and top-down ordering requires a lot of special cases.
 
 
-Why doesn't ssort allow me to configure X?
+Why doesn't osort allow me to configure X?
 ------------------------------------------
 
-``ssort`` aims to bring about ecosystem wide consistency in how python source files are organised.
+``osort`` aims to bring about ecosystem wide consistency in how python source files are organised.
 If this can be achieved then it will help all programmers familiar with its conventions to navigate unfamiliar codebases, and it will reduce arguments between programmers who prefer different conventions.
 This only works if those conventions can't be changed.
 
 
-Why was ssort created?
+Why was osort created?
 ----------------------
 
-``ssort`` exists because its author was too lazy to implement jump-to-definition in his text editor, and decided that it would be easier to just reformat all of the world's python code to make it possible to navigate by scrolling.
+``osort`` exists because its author was too lazy to implement jump-to-definition in his text editor, and decided that it would be easier to just reformat all of the world's python code to make it possible to navigate by scrolling.
 
 .. end-faq
 
@@ -328,9 +328,9 @@ Why was ssort created?
 Links
 =====
 
-- Source code: https://github.com/bwhmather/ssort
-- Issue tracker: https://github.com/bwhmather/ssort/issues
-- PyPI: https://pypi.python.org/pypi/ssort
+- Source code: https://github.com/bwhmather/osort
+- Issue tracker: https://github.com/bwhmather/osort/issues
+- PyPI: https://pypi.python.org/pypi/osort
 
 
 License

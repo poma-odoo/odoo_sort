@@ -6,7 +6,7 @@ from typing import Iterable
 
 import pytest
 
-from ssort._ast import iter_child_nodes
+from odoo_sort._ast import iter_child_nodes
 
 _deprecated_node_types: tuple[type[ast.AST], ...] = (
     ast.AugLoad,

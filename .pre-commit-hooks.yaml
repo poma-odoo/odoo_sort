@@ -1,6 +1,6 @@
-- id: ssort
-  name: ssort
+- id: osort
+  name: osort
   description: Sorting top level statements in python files.
-  entry: ssort
+  entry: osort
   language: python
   types: [python]

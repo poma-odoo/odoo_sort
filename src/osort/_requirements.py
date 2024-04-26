@@ -6,10 +6,10 @@ import enum
 import sys
 from typing import Iterable
 
-from ssort._ast import iter_child_nodes
-from ssort._bindings import get_bindings
-from ssort._builtins import CLASS_BUILTINS
-from ssort._utils import single_dispatch
+from osort._ast import iter_child_nodes
+from osort._bindings import get_bindings
+from osort._builtins import CLASS_BUILTINS
+from osort._utils import single_dispatch
 
 
 class Scope(enum.Enum):

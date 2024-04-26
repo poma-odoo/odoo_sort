@@ -3,8 +3,8 @@ from __future__ import annotations
 import ast
 from typing import Iterable
 
-from ssort._ast import iter_child_nodes
-from ssort._utils import single_dispatch
+from osort._ast import iter_child_nodes
+from osort._utils import single_dispatch
 
 
 @single_dispatch

@@ -3,10 +3,10 @@ from __future__ import annotations
 import ast
 from typing import Iterable
 
-from ssort._bindings import get_bindings
-from ssort._method_requirements import get_method_requirements
-from ssort._requirements import Requirement, get_requirements
-from ssort._utils import cached_method
+from osort._bindings import get_bindings
+from osort._method_requirements import get_method_requirements
+from osort._requirements import Requirement, get_requirements
+from osort._utils import cached_method
 
 
 class Statement:

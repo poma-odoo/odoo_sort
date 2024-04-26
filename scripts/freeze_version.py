@@ -9,13 +9,13 @@ import pathlib
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Hard codes the version number reported by ssort"
+        description="Hard codes the version number reported by odoo_sort"
     )
     parser.add_argument(
         "-o",
         "--output",
         type=pathlib.Path,
-        default=pathlib.Path("src/ssort/_version.py"),
+        default=pathlib.Path("src/odoo_sort/_version.py"),
         help="Where to write the frozen version number",
     )
     parser.add_argument(

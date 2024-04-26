@@ -6,7 +6,7 @@ from typing import Iterable
 
 import pathspec
 
-from ssort._utils import memoize
+from osort._utils import memoize
 
 _EMPTY_PATH_SPEC = pathspec.PathSpec([])
 

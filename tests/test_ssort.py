@@ -3,7 +3,7 @@ import textwrap
 
 import pytest
 
-from ssort import ssort
+from odoo_sort import odoo_sort
 
 type_parameter_syntax = pytest.mark.skipif(
     sys.version_info < (3, 12),
@@ -18,21 +18,21 @@ def _clean(text):
 def test_empty():
     original = ""
     expected = ""
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
 def test_no_trailing_newline():
     original = "a = 1"
     expected = "a = 1\n"
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
 def test_trailing_newline():
     original = "b = 2\n"
     expected = "b = 2\n"
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
@@ -57,7 +57,7 @@ def test_cycle():
             return a()
         """
     )
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
@@ -82,7 +82,7 @@ def test_cycle_reversed():
             return b()
         """
     )
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
@@ -107,7 +107,7 @@ def test_cycle_with_dependant():
             return a()
         """
     )
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
@@ -136,7 +136,7 @@ def test_depencency_order():
             _step2()
         """
     )
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
@@ -179,7 +179,7 @@ def test_isort_finders():
             return [A, B]
         """
     )
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
@@ -224,7 +224,7 @@ def test_single_dispatch():
             fun()
         """
     )
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
@@ -245,7 +245,7 @@ def test_slots():
             str_attr: str
         """
     )
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
@@ -268,7 +268,7 @@ def test_pretend_dunder_properties():
             other_column = None
         """
     )
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
@@ -300,7 +300,7 @@ def test_mixed_runtime_initialisation():
             attr = method
         """
     )
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
@@ -327,7 +327,7 @@ def test_walrus():
                 return True
         """
     )
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
@@ -352,7 +352,7 @@ def test_attribute_assign_class_example():
             foo_method.short_description = "Foo method"
         """
     )
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
@@ -371,7 +371,7 @@ def test_iter_unpack_in_class():
                 a, *b = 1, 2, 3
         """
     )
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
@@ -412,7 +412,7 @@ def test_overload_decorator():
             f(5)
         """
     )
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
@@ -433,7 +433,7 @@ def test_concat():
             return l
         """
     )
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
@@ -462,7 +462,7 @@ def test_inner_class():
             a = 4
         """
     )
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
@@ -495,7 +495,7 @@ def test_lifecycle_class():
                 ...
         """
     )
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
@@ -532,7 +532,7 @@ def test_lifecycle_class_private():
                 self._shutdown_inner
         """
     )
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
@@ -547,27 +547,27 @@ def test_single_comment():
         # This is a file with just a single comment!
         """
     )
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
-def test_ssort_preserve_crlf_endlines_bytes():
+def test_odoo_sort_preserve_crlf_endlines_bytes():
     original = b"a = b\r\nb = 4"
     expected = b"b = 4\r\na = b\r\n"
 
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
-def test_ssort_preserve_crlf_endlines_str():
+def test_odoo_sort_preserve_crlf_endlines_str():
     original = "a = b\r\nb = 4"
     expected = "b = 4\r\na = b\r\n"
 
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
-def test_ssort_list_comp_conflicts_with_global_scope():
+def test_odoo_sort_list_comp_conflicts_with_global_scope():
     original = _clean(
         """
         def f():
@@ -587,11 +587,11 @@ def test_ssort_list_comp_conflicts_with_global_scope():
         """
     )
 
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
-def test_ssort_set_comp_conflicts_with_global_scope():
+def test_odoo_sort_set_comp_conflicts_with_global_scope():
     original = _clean(
         """
         def f():
@@ -611,11 +611,11 @@ def test_ssort_set_comp_conflicts_with_global_scope():
         """
     )
 
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
-def test_ssort_dict_comp_conflicts_with_global_scope():
+def test_odoo_sort_dict_comp_conflicts_with_global_scope():
     original = _clean(
         """
         def f():
@@ -635,11 +635,11 @@ def test_ssort_dict_comp_conflicts_with_global_scope():
         """
     )
 
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
-def test_ssort_generator_exp_conflicts_with_global_scope():
+def test_odoo_sort_generator_exp_conflicts_with_global_scope():
     original = _clean(
         """
         def f():
@@ -659,11 +659,11 @@ def test_ssort_generator_exp_conflicts_with_global_scope():
         """
     )
 
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
-def test_ssort_self_positional_only():
+def test_odoo_sort_self_positional_only():
     original = _clean(
         """
         class C:
@@ -684,7 +684,7 @@ def test_ssort_self_positional_only():
                 pass
         """
     )
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
@@ -692,7 +692,7 @@ def test_single_line_dummy_function():
     original = "def fun(): ...\n"
     expected = "def fun(): ...\n"
 
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
@@ -700,12 +700,12 @@ def test_single_line_dummy_class():
     original = "class Class: ...\n"
     expected = "class Class: ...\n"
 
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
 @type_parameter_syntax
-def test_ssort_type_alias():
+def test_odoo_sort_type_alias():
     original = _clean(
         """
         from decimal import Decimal
@@ -730,12 +730,12 @@ def test_ssort_type_alias():
         roundint(3.14)
         """
     )
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
 @type_parameter_syntax
-def test_ssort_generic_function():
+def test_odoo_sort_generic_function():
     original = _clean(
         """
         func(4)
@@ -750,12 +750,12 @@ def test_ssort_generic_function():
         func(4)
         """
     )
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected
 
 
 @type_parameter_syntax
-def test_ssort_generic_class():
+def test_odoo_sort_generic_class():
     original = _clean(
         """
         obj = ClassA[str]()
@@ -774,5 +774,5 @@ def test_ssort_generic_class():
         obj = ClassA[str]()
         """
     )
-    actual = ssort(original)
+    actual = odoo_sort(original)
     assert actual == expected

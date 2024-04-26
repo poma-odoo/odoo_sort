@@ -4,7 +4,7 @@ import ast
 import sys
 from typing import Iterable
 
-from ssort._utils import single_dispatch
+from osort._utils import single_dispatch
 
 
 @single_dispatch

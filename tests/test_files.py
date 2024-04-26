@@ -4,7 +4,7 @@ import pathlib
 
 import pytest
 
-from ssort._files import is_ignored
+from odoo_sort._files import is_ignored
 
 
 def test_ignore_git(

@@ -1,6 +1,6 @@
 import pathlib
 
-from ssort import ssort
+from odoo_sort import odoo_sort
 
 
 def pytest_generate_tests(metafunc):
@@ -21,7 +21,7 @@ def test_samples(sample):
     output_path = samples_dir / f"{sample}_output.py"
     input_text = input_path.read_bytes()
 
-    actual_text = ssort(
+    actual_text = odoo_sort(
         input_text,
         filename=str(input_path),
         on_wildcard_import=lambda **kwargs: None,
@@ -41,12 +41,12 @@ def test_idempotent(sample):
     input_path = samples_dir / f"{sample}_input.py"
     input_text = input_path.read_bytes()
 
-    sorted_text = ssort(
+    sorted_text = odoo_sort(
         input_text,
         filename=str(input_path),
         on_wildcard_import=lambda **kwargs: None,
     )
-    resorted_text = ssort(
+    resorted_text = odoo_sort(
         sorted_text,
         filename=str(input_path),
         on_wildcard_import=lambda **kwargs: None,

@@ -1,6 +1,6 @@
 import random
 
-from ssort._graphs import Graph, topological_sort
+from odoo_sort._graphs import Graph, topological_sort
 
 
 def test_topological_sort_chain():
