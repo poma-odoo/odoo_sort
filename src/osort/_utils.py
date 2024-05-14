@@ -22,15 +22,22 @@ def sort_key_from_iter(values):
     return key
 
 
-def sort_key_from_other(statements, sort_base):
+def sort_key_from_ending(statements, sort_base):
     """
     Sort key function that uses another list which the values
     of the other fields are part of main values.
     param values: list of statements
     param sort_base: list of strings which are part of strings in values
     """
-    other_index = {other_value: index for index, other_value in enumerate(sort_base)}
-    index = {statement: other_index[other_value] for statement in statements for other_value in sort_base if other_value in statement.bindings()[:1]}
+    other_index = {
+        other_value: index for index, other_value in enumerate(sort_base)
+    }
+    index = {
+        statement.bindings()[0]: other_index[other_value]
+        for statement in statements
+        for other_value in sort_base
+        if statement.bindings()[0].endswith(f"_{other_value}")
+    }
     key = lambda value: index[value]
     return key
 
@@ -47,7 +54,7 @@ class _SingleDispatch(Generic[_T]):
         self._functions: dict[type[Any], Callable[..., _T]] = {}
 
     def register(
-            self, cls: type[Any]
+        self, cls: type[Any]
     ) -> Callable[[Callable[..., _T]], Callable[..., _T]]:
         def decorator(function: Callable[..., _T]) -> Callable[..., _T]:
             self._functions[cls] = function

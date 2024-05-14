@@ -1,4 +1,4 @@
-from odoo_sort._parsing import parse
+from osort._parsing import parse
 
 
 def test_statement_text_padded_same_row():

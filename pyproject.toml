@@ -25,14 +25,14 @@ classifiers = [
 dependencies = [
     "pathspec >=0.9.0"
 ]
-description = "The Odoo guidlined Python file sorter"
+description = "The Odoo guidelined Python file sorter"
 dynamic = [
     "version"
 ]
 maintainers = [
     {email = "mn.pouya@gmail.com", name = "Pouya M Dezfoli"},
 ]
-name = "odoo_sort"
+name = "osort"
 readme = "README.rst"
 requires-python = ">=3.8"
 
@@ -40,7 +40,7 @@ requires-python = ">=3.8"
 text = "MIT"
 
 [project.scripts]
-osort = "odoo_sort._main:main"
+osort = "osort._main:main"
 
 [project.urls]
 Homepage = "https://github.com/poma-odoo/odoo_sort"
@@ -69,7 +69,7 @@ license-files = [
 ]
 
 [tool.setuptools.dynamic.version]
-attr = "odoo_sort.__version__"
+attr = "osort.__version__"
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -13,6 +13,19 @@ class Graph(Generic[_T]):
         self.dependencies: dict[_T, list[_T]] = {}
         self.dependants: dict[_T, list[_T]] = {}
 
+    def copy(self) -> Graph[_T]:
+        dup: Graph[_T] = Graph()
+        dup.update(self)
+        return dup
+
+    def update(self, other: Graph[_T]) -> None:
+        for node in other.nodes:
+            self.add_node(node)
+
+        for node in other.nodes:
+            for dependency in other.dependencies[node]:
+                self.add_dependency(node, dependency)
+
     def add_node(self, identifier: _T) -> None:
         if identifier not in self.nodes:
             self.nodes.append(identifier)
@@ -54,19 +67,6 @@ class Graph(Generic[_T]):
             self.dependants[dependency].remove(node)
         except ValueError:
             pass
-
-    def update(self, other: Graph[_T]) -> None:
-        for node in other.nodes:
-            self.add_node(node)
-
-        for node in other.nodes:
-            for dependency in other.dependencies[node]:
-                self.add_dependency(node, dependency)
-
-    def copy(self) -> Graph[_T]:
-        dup: Graph[_T] = Graph()
-        dup.update(self)
-        return dup
 
 
 def _remove_self_references(graph: Graph[_T]) -> None:

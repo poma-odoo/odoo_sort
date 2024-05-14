@@ -6,7 +6,7 @@ from typing import Iterable
 
 import pytest
 
-from odoo_sort._ast import iter_child_nodes
+from osort._ast import iter_child_nodes
 
 _deprecated_node_types: tuple[type[ast.AST], ...] = (
     ast.AugLoad,
@@ -30,6 +30,10 @@ _ignored_node_types: tuple[type[ast.AST], ...] = (
 def _nodes_types(
     node_type: type[ast.AST] = ast.AST,
 ) -> Iterable[type[ast.AST]]:
+    # coverage package adds a coverage.parser.NodeList subclass
+    if node_type.__module__ != "ast":
+        return
+
     # Skip deprecated AST nodes.
     if issubclass(node_type, _deprecated_node_types):
         return

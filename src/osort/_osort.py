@@ -24,8 +24,8 @@ from osort._utils import (
     detect_encoding,
     detect_newline,
     normalize_newlines,
+    sort_key_from_ending,
     sort_key_from_iter,
-    sort_key_from_other,
 )
 
 SPECIAL_PROPERTIES = [
@@ -464,7 +464,9 @@ def _is_compute_method(statement):
             for dec in statement.node.decorator_list
         )
         or all(
-            binding.startswith("_inverse_") or binding.startswith("_search_")
+            binding.startswith("_compute_")
+            or binding.startswith("_inverse_")
+            or binding.startswith("_search_")
             for binding in statement.bindings()
         )
     )
@@ -514,13 +516,22 @@ def _statement_binding_sort_key(binding_key):
             return sys.maxsize
 
     def _key(statement):
+        """
+        Returns a tuple of (key, binding) to sort the statements on the binding_key first,
+        and then alphabetically on their binding. Alphabetic sorting will work for the cases when
+        no key is found for the binding as well as when there are several similar methods and sort
+        key is based on the ending, e.g. _compute_field, _search_field, _inverse_field, etc.
+        """
         bindings = statement.bindings()
-        return min(_safe_binding_key(binding) for binding in bindings)
+        return (
+            min(_safe_binding_key(binding) for binding in bindings),
+            bindings[0],
+        )
 
     return _key
 
 
-def _statement_text_sorted_class(statement):
+def _statement_text_sorted_class(statement, sort_fields=False):
     head_text, unsorted_statements = split_class(statement)
 
     statements = list(unsorted_statements)
@@ -535,6 +546,7 @@ def _statement_text_sorted_class(statement):
     else:
         docstrings = []
 
+    # General class stuff
     special_properties, statements = _partition(
         statements, _is_special_property
     )
@@ -570,9 +582,6 @@ def _statement_text_sorted_class(statement):
     odoo_fields, statements = _partition(statements, _is_field)
 
     compute_methods, statements = _partition(statements, _is_compute_method)
-    # presort to have_compute, _inverse and _search in order
-    # they will have the same keys when sorted by fields name
-    compute_methods.sort(key=lambda st: st.bindings()[:1])
 
     selection_methods, statements = _partition(
         statements, _is_selection_method
@@ -591,6 +600,9 @@ def _statement_text_sorted_class(statement):
     methods, statements = statements, []
 
     fields = [statement.bindings()[0] for statement in odoo_fields]
+    if sort_fields:
+        fields = sorted(fields)
+
     sorted_statements = []
 
     # === Join groups back together in the correct order =======================
@@ -625,7 +637,7 @@ def _statement_text_sorted_class(statement):
             -1
             if binding == "default_get"
             else _statement_binding_sort_key(
-                sort_key_from_other(default_methods, fields)
+                sort_key_from_ending(default_methods, fields)
             )
         ),
     )
@@ -633,8 +645,12 @@ def _statement_text_sorted_class(statement):
     # Regular properties (in original order).
     sorted_statements += properties
 
-    # Odoo fields (in original order).
-    sorted_statements += odoo_fields
+    # Odoo fields (in original order or sorted).
+    sorted_statements += (
+        sorted(odoo_fields, key=lambda field: field.bindings()[0])
+        if sort_fields
+        else odoo_fields
+    )
 
     # Odoo special attributes (in hard-coded order).
     # These are the ones that come right after fields definition
@@ -643,7 +659,7 @@ def _statement_text_sorted_class(statement):
         odoo_special_attributes,
         key=_statement_binding_sort_key(
             sort_key_from_iter(ODOO_SPECIAL_ATTRIBUTES)
-        )
+        ),
     )
 
     # Special class lifecycle methods (in hard-coded order).
@@ -658,7 +674,7 @@ def _statement_text_sorted_class(statement):
     sorted_statements += sorted(
         compute_methods,
         key=_statement_binding_sort_key(
-            sort_key_from_other(compute_methods, fields)
+            sort_key_from_ending(compute_methods, fields)
         ),
     )
 
@@ -667,7 +683,7 @@ def _statement_text_sorted_class(statement):
     sorted_statements += sorted(
         selection_methods,
         key=_statement_binding_sort_key(
-            sort_key_from_other(selection_methods, fields)
+            sort_key_from_ending(selection_methods, fields)
         ),
     )
 
@@ -675,7 +691,7 @@ def _statement_text_sorted_class(statement):
     sorted_statements += sorted(
         constraint_methods,
         key=_statement_binding_sort_key(
-            sort_key_from_other(constraint_methods, fields)
+            sort_key_from_ending(constraint_methods, fields)
         ),
     )
 
@@ -683,7 +699,7 @@ def _statement_text_sorted_class(statement):
     sorted_statements += sorted(
         onchange_methods,
         key=_statement_binding_sort_key(
-            sort_key_from_other(onchange_methods, fields)
+            sort_key_from_ending(onchange_methods, fields)
         ),
     )
 
@@ -736,16 +752,16 @@ def _statement_text_sorted_class(statement):
         head_text
         + "\n"
         + "\n".join(
-            statement_text_sorted(body_statement)
+            statement_text_sorted(body_statement, sort_fields=sort_fields)
             for body_statement in sorted_statements
         )
     )
 
 
-def statement_text_sorted(statement):
+def statement_text_sorted(statement, sort_fields=False):
     node = statement.node
     if isinstance(node, ast.ClassDef):
-        return _statement_text_sorted_class(statement)
+        return _statement_text_sorted_class(statement, sort_fields=sort_fields)
     return statement.text
 
 
@@ -852,6 +868,7 @@ def osort(
     text,
     *,
     filename="<unknown>",
+    sort_fields=False,
     on_unknown_encoding_error="raise",
     on_decoding_error="raise",
     on_parse_error="raise",
@@ -908,7 +925,8 @@ def osort(
     assert is_topologically_sorted(sorted_statements, graph=graph)
 
     output = "\n".join(
-        statement_text_sorted(statement) for statement in sorted_statements
+        statement_text_sorted(statement, sort_fields=sort_fields)
+        for statement in sorted_statements
     )
     if output:
         output += "\n"

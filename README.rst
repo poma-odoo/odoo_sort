@@ -5,12 +5,9 @@ osort
 |build-status| |coverage|
 
 .. |build-status| image:: https://github.com/bwhmather/osort/actions/workflows/ci.yaml/badge.svg?branch=master
-    :target: https://github.com/bwhmather/osort/actions/workflows/ci.yaml
+    :target: https://github.com/poma-odoo/odoo_sort/actions/workflows/ci.yaml
     :alt: Build Status
 
-.. |coverage| image:: https://coveralls.io/repos/github/bwhmather/osort/badge.svg?branch=master
-    :target: https://coveralls.io/github/bwhmather/osort?branch=master
-    :alt: Cocerage
 
 
 .. begin-docs

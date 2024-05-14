@@ -1,4 +1,4 @@
-from odoo_sort._parsing import parse, split_class
+from osort._parsing import parse, split_class
 
 
 def _split_text(source):

@@ -8,6 +8,19 @@ from osort._exceptions import ParseError
 from osort._statements import Statement
 
 
+def _build_row_lengths_offsets(text):
+    # Build an index of row lengths and start offsets to enable fast string
+    # indexing using ast row/column coordinates.
+    row_lengths = []
+    row_offsets = [0]
+    for offset, char in enumerate(text):
+        if char == "\n":
+            row_lengths.append(offset - row_offsets[-1])
+            row_offsets.append(offset + 1)
+    row_lengths.append(len(text) - row_offsets[-1])
+    return row_lengths, row_offsets
+
+
 def _find_start(node):
     if (
         isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
@@ -29,17 +42,8 @@ def split(
     nodes,
     next_row=0,
     next_col=0,
-    indent=0,
 ):
-    # Build an index of row lengths and start offsets to enable fast string
-    # indexing using ast row/column coordinates.
-    row_lengths = []
-    row_offsets = [0]
-    for offset, char in enumerate(root_text):
-        if char == "\n":
-            row_lengths.append(offset - row_offsets[-1])
-            row_offsets.append(offset + 1)
-    row_lengths.append(len(root_text) - row_offsets[-1])
+    row_lengths, row_offsets = _build_row_lengths_offsets(root_text)
 
     nodes = iter(nodes)
 
@@ -51,6 +55,8 @@ def split(
 
         indent_text = " " * next_node.col_offset
         next_indent_text = ""
+    else:
+        return
 
     while next_node:
         this_node, next_node = next_node, next(nodes, None)
@@ -106,15 +112,7 @@ def split_class(statement):
     text = statement.text
     text_padded = statement.text_padded()
 
-    # Build an index of row lengths and start offsets to enable fast string
-    # indexing using ast row/column coordinates.
-    row_lengths = []
-    row_offsets = [0]
-    for offset, char in enumerate(text_padded):
-        if char == "\n":
-            row_lengths.append(offset - row_offsets[-1])
-            row_offsets.append(offset + 1)
-    row_lengths.append(len(text_padded) - row_offsets[-1])
+    _, row_offsets = _build_row_lengths_offsets(text_padded)
 
     tokens = iter(generate_tokens(StringIO(text_padded).readline))
 

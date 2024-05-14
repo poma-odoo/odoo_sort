@@ -4,7 +4,7 @@ import textwrap
 
 import pytest
 
-from odoo_sort._requirements import get_requirements
+from osort._requirements import get_requirements
 
 match_statement = pytest.mark.skipif(
     sys.version_info < (3, 10),

@@ -1,7 +1,7 @@
 import textwrap
 
-from odoo_sort._dependencies import module_statements_graph
-from odoo_sort._parsing import parse
+from osort._dependencies import module_statements_graph
+from osort._parsing import parse
 
 
 def _clean(source):

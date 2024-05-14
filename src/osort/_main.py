@@ -40,6 +40,12 @@ def main():
         "needs to be changed.  Otherwise returns 1.",
     )
     parser.add_argument(
+        "--alpha",
+        dest="sort_fields",
+        action="store_true",
+        help="Sort the fields alphabetically",
+    )
+    parser.add_argument(
         "files", nargs="*", help="One or more python files to sort"
     )
 
@@ -123,6 +129,7 @@ def main():
             updated = osort(
                 original,
                 filename=escape_path(path),
+                sort_fields=args.sort_fields,
                 on_parse_error=_on_parse_error,
                 on_unresolved=_on_unresolved,
                 on_wildcard_import=_on_wildcard_import,
