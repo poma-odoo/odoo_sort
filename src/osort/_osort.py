@@ -633,12 +633,12 @@ def _statement_text_sorted_class(statement, sort_fields=False):
     # Default methods (in fields order, put default_get first).
     sorted_statements += sorted(
         default_methods,
-        key=lambda binding: (
+        key=lambda statement: (
             -1
-            if binding == "default_get"
+            if "default_get" in statement.bindings()
             else _statement_binding_sort_key(
                 sort_key_from_ending(default_methods, fields)
-            )
+            )(statement)
         ),
     )
 

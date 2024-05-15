@@ -125,6 +125,15 @@ def main():
                 "WARNING: can't determine dependencies on * import\n"
             )
 
+        updated = osort(
+            original,
+            filename=escape_path(path),
+            sort_fields=args.sort_fields,
+            on_parse_error=_on_parse_error,
+            on_unresolved=_on_unresolved,
+            on_wildcard_import=_on_wildcard_import,
+        )
+
         try:
             updated = osort(
                 original,
